@@ -2,15 +2,16 @@
 import { state, esc, view, api, loadAuth, saveAuth, clearAuth, initEvents, me } from './lib.js'
 import { landing, joinFlow, quizFlow } from './flows.js'
 import * as pages from './pages.js'
+import { mascotSvg, icon } from './art.js'
 
 const NAV = [
-  ['home', '🏠', 'Home'],
-  ['explore', '🧭', 'Explore'],
-  ['vote', '🗳️', 'Vote'],
-  ['dates', '📅', 'Dates'],
-  ['plan', '📝', 'Plan'],
-  ['money', '💰', 'Money'],
-  ['crew', '👥', 'Crew'],
+  ['home', 'home', 'Home'],
+  ['explore', 'compass', 'Explore'],
+  ['vote', 'vote', 'Vote'],
+  ['dates', 'calendar', 'Dates'],
+  ['plan', 'list', 'Plan'],
+  ['money', 'wallet', 'Money'],
+  ['crew', 'users', 'Crew'],
 ]
 
 export function go(route) {
@@ -21,12 +22,12 @@ export function go(route) {
 export function shell(active, content, { wide = false } = {}) {
   const items = (cls) =>
     NAV.map(
-      ([id, icon, label]) =>
-        `<a class="${cls}${active === id ? ' active' : ''}" href="#${id}">${cls === 'nav-item' ? `<span class="ni">${icon}</span>${label}` : `${icon}<span>${label}</span>`}</a>`,
+      ([id, name, label]) =>
+        `<a class="${cls}${active === id ? ' active' : ''}" href="#${id}">${icon(name)}${cls === 'nav-item' ? label : `<span>${label}</span>`}</a>`,
     ).join('')
   return `<div class="shell${wide ? ' wide' : ''}">
-    <nav class="sidebar"><a class="logo" href="#home"><img src="/img/kweku.svg" alt="">boys trip</a>${items('nav-item')}</nav>
-    <div class="topbar"><a class="logo" href="#home"><img src="/img/kweku.svg" alt="">${esc(state.trip.name)}</a></div>
+    <nav class="sidebar"><a class="logo" href="#home">${mascotSvg('still', 36)}everytrip</a>${items('nav-item')}</nav>
+    <div class="topbar"><a class="logo" href="#home">${mascotSvg('still', 30)}${esc(state.trip.name)}</a></div>
     <main class="main"><div class="main-inner">${content}</div></main>
     <nav class="tabbar">${items('')}</nav>
   </div>`
@@ -76,7 +77,7 @@ async function boot() {
   } catch (err) {
     if (err.status === 404) {
       return view(`<div class="flow"><div class="flow-body center" style="padding-top:80px">
-        <img src="/img/kweku.svg" width="120" alt="">
+        ${mascotSvg('idle', 120)}
         <h2>Trip not found</h2><p class="muted">This link may be old. Ask the organiser for the latest one.</p>
         <a class="btn" href="/">Go home</a></div></div>`)
     }

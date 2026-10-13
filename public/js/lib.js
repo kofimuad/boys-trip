@@ -1,4 +1,5 @@
 // Shared state, API calls and small UI helpers.
+import { mascotSvg } from './art.js'
 
 export const state = {
   tripId: null,
@@ -25,11 +26,28 @@ export function avatar(member) {
   return `<span class="avatar" style="background:${COLORS[i]}">${esc(member.name[0]?.toUpperCase() || '?')}</span>`
 }
 
-export const mascot = (say, big = false) =>
-  `<div class="mascot${big ? ' big' : ''}">${big ? `<div class="bubble">${say}</div>` : ''}<img src="/img/kweku.svg" alt="Kweku the parrot">${big ? '' : `<div class="bubble">${say}</div>`}</div>`
+export const mascot = (say, big = false, mood = 'idle') =>
+  `<div class="mascot${big ? ' big' : ''}">${big ? `<div class="bubble">${say}</div>` : ''}${mascotSvg(mood)}${big ? '' : `<div class="bubble">${say}</div>`}</div>`
+
+// Wikipedia lead photo for a destination, cached for the session.
+const photoCache = {}
+export function wikiPhoto(d) {
+  photoCache[d.id] ||= fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(d.wiki)}`)
+    .then((r) => (r.ok ? r.json() : {}))
+    .then((data) => data.thumbnail?.source || null)
+    .catch(() => null)
+  return photoCache[d.id]
+}
+export function fillPhotos() {
+  document.querySelectorAll('[data-photo]').forEach(async (el) => {
+    const d = dest(el.dataset.photo)
+    const src = d && (await wikiPhoto(d))
+    if (src) el.style.backgroundImage = `url("${src.replace(/"/g, '%22')}")`
+  })
+}
 
 // Per-trip sign-in details live in this browser only.
-const key = (tripId) => 'boystrip:' + tripId
+const key = (tripId) => 'everytrip:' + tripId
 export function loadAuth(tripId) {
   try {
     return JSON.parse(localStorage.getItem(key(tripId))) || {}
@@ -51,14 +69,14 @@ export function clearAuth(tripId, fields) {
 }
 export function rememberTrip(trip) {
   try {
-    const list = JSON.parse(localStorage.getItem('boystrip:trips') || '[]').filter((t) => t.id !== trip.id)
+    const list = JSON.parse(localStorage.getItem('everytrip:trips') || '[]').filter((t) => t.id !== trip.id)
     list.unshift({ id: trip.id, name: trip.name })
-    localStorage.setItem('boystrip:trips', JSON.stringify(list.slice(0, 5)))
+    localStorage.setItem('everytrip:trips', JSON.stringify(list.slice(0, 5)))
   } catch {}
 }
 export function knownTrips() {
   try {
-    return JSON.parse(localStorage.getItem('boystrip:trips') || '[]')
+    return JSON.parse(localStorage.getItem('everytrip:trips') || '[]')
   } catch {
     return []
   }

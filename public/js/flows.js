@@ -1,12 +1,14 @@
 // Full-screen step-by-step flows: landing, create a trip, join a trip, the quiz.
 import { state, esc, mascot, view, api, act, saveAuth, rememberTrip, knownTrips, toast, dest, avatar } from './lib.js'
 import { scoreQuiz } from './logic.js'
+import { mascotSvg, icon } from './art.js'
+import { fillPhotos } from './lib.js'
 import { go } from './app.js'
 
 function flow({ progress, back, body, foot }) {
   return `<div class="flow">
     <div class="flow-top">
-      ${back ? `<button class="icon-btn" data-action="${back}" aria-label="Back">←</button>` : ''}
+      ${back ? `<button class="icon-btn" data-action="${back}" aria-label="Back">${icon('back')}</button>` : ''}
       ${progress != null ? `<div class="progress"><div style="width:${Math.round(progress * 100)}%"></div></div>` : ''}
     </div>
     <div class="flow-body">${body}</div>
@@ -22,11 +24,11 @@ const continueBtn = (enabled = true, label = 'Continue', action = 'next') =>
 export function landing() {
   const trips = knownTrips()
   view(`<div class="landing">
-    <header><a class="logo" href="/"><img src="/img/kweku.svg" alt="">boys trip</a></header>
+    <header><a class="logo" href="/">${mascotSvg('still', 36)}everytrip</a></header>
     <div class="hero">
-      <img class="hero-art" src="/img/kweku.svg" alt="Kweku the parrot">
+      ${mascotSvg('idle', 280)}
       <div class="hero-text">
-        <h1>The free, fun way to plan a trip around Ghana with your friends!</h1>
+        <h1>Plan a trip around Ghana with your friends.</h1>
         <div class="stack">
           <button class="btn block" data-action="create">Plan a new trip</button>
           ${trips
@@ -48,6 +50,7 @@ function createFlow() {
   const steps = [
     () => ({
       say: "Akwaaba! I'm Kweku. Let's set up your trip. What should we call it?",
+      mood: 'cheer',
       field: `<input name="v" maxlength="60" value="${esc(data.tripName)}" placeholder="Boys Trip 2026" autofocus>`,
       save: (v) => (data.tripName = v),
     }),
@@ -70,7 +73,7 @@ function createFlow() {
       flow({
         progress: (step + 1) / (steps.length + 1),
         back: 'back',
-        body: `${mascot(s.say)}<form data-form="next">${s.field}</form>`,
+        body: `${mascot(s.say, false, s.mood)}<form data-form="next">${s.field}</form>`,
         foot: continueBtn(true, step === steps.length - 1 ? 'Create trip' : 'Continue'),
       }),
       {
@@ -100,11 +103,11 @@ function createFlow() {
 export function shareScreen(adminKey) {
   const link = `${location.origin}/t/${state.tripId}`
   const adminLink = `${link}#admin=${adminKey}`
-  const msg = `Join our trip planner for ${state.trip.name}! 🇬🇭 ${link}`
+  const msg = `Join our trip planner for ${state.trip.name}: ${link}`
   view(
     flow({
       progress: 1,
-      body: `${mascot('Your trip is ready! Share this link in the group chat so the boys can join.')}
+      body: `${mascot('Your trip is ready! Share this link in the group chat so the boys can join.', false, 'cheer')}
         <div class="card stack">
           <h3>Invite link</h3>
           <input readonly value="${esc(link)}" data-action="select">
@@ -115,7 +118,7 @@ export function shareScreen(adminKey) {
           <p class="muted small">Anyone with this link can see and join the trip, so only share it with the group.</p>
         </div>
         <div class="card stack" style="margin-top:16px">
-          <h3>Your organiser link 🔑</h3>
+          <h3>Your organiser link</h3>
           <p class="muted small">Keep this one to yourself. It lets you lock in the place and dates and manage the group from any device.</p>
           <input readonly value="${esc(adminLink)}" data-action="select">
           <button class="btn ghost small" data-action="copy" data-text="${esc(adminLink)}">Copy organiser link</button>
@@ -144,7 +147,7 @@ export function joinFlow() {
   function start() {
     view(
       flow({
-        body: `${mascot(`Akwaaba! You've been invited to <b>${esc(trip.name)}</b>.`, true)}
+        body: `${mascot(`Akwaaba! You've been invited to <b>${esc(trip.name)}</b>.`, true, 'cheer')}
           <p class="center muted">${trip.members.length} ${trip.members.length === 1 ? 'person has' : 'people have'} joined so far</p>
           <div class="stack" style="max-width:380px;margin:24px auto 0">
             <button class="btn block" data-action="new">I'm new here</button>
@@ -197,7 +200,7 @@ export function joinFlow() {
       saveAuth(trip.id, { token: res.token, memberId: res.memberId })
       state.memberId = res.memberId
       rememberTrip(state.trip)
-      toast(mode === 'new' ? "You're in! 🎉" : 'Welcome back!')
+      toast(mode === 'new' ? "You're in!" : 'Welcome back!')
       go('home')
     }
     view(flow({ progress: (step + 1) / 3, back: 'back', body, foot: continueBtn(enabled) }), handlers)
@@ -218,7 +221,7 @@ export function quizFlow() {
       return view(
         flow({
           back: 'exit',
-          body: mascot(esc(intro), true),
+          body: mascot(esc(intro), true, 'cheer'),
           foot: continueBtn(true, 'Start quiz'),
         }),
         { exit: () => go('home'), next: () => (step++, render()) },
@@ -230,11 +233,11 @@ export function quizFlow() {
       flow({
         progress: step / questions.length,
         back: 'back',
-        body: `${mascot(esc(q.say))}
+        body: `${mascot(esc(q.say), false, 'walk')}
           <div class="options">${q.options
             .map(
               (o, i) => `<button class="option${answers[step] === i ? ' selected' : ''}" data-action="pick" data-i="${i}">
-                <span class="icon">${o.icon}</span><span>${esc(o.label)}</span></button>`,
+                <span class="icon">${i + 1}</span><span>${esc(o.label)}</span></button>`,
             )
             .join('')}</div>`,
         foot: continueBtn(answers[step] != null, step === questions.length - 1 ? 'See my place' : 'Continue'),
@@ -255,12 +258,14 @@ export function quizFlow() {
     view(
       flow({
         progress: 1,
-        body: `${mascot(`I've got it! You should go to <b>${esc(top.name)}</b>!`, true)}
-          <div class="card stack" style="margin-top:20px">
-            <div class="result-art">${top.emoji}</div>
-            <h2 class="center">${esc(top.name)}</h2>
-            <p class="center muted">${esc(top.tagline)}</p>
-            ${runnerUp ? `<p class="center small muted">Close second: ${esc(runnerUp.name)} ${runnerUp.emoji}</p>` : ''}
+        body: `${mascot(`I've got it! You should go to <b>${esc(top.name)}</b>!`, true, 'cheer')}
+          <div class="card dest-card" style="margin-top:20px">
+            <div class="photo" data-photo="${top.id}"></div>
+            <div class="body center">
+              <h2 style="margin:0">${esc(top.name)}</h2>
+              <p class="muted" style="margin:0">${esc(top.tagline)}</p>
+              ${runnerUp ? `<p class="small muted" style="margin:0">Close second: ${esc(runnerUp.name)}</p>` : ''}
+            </div>
           </div>`,
         foot: `<button class="btn ghost" data-action="details">See details</button>
                <button class="btn" data-action="vote">Make it my #1 vote</button>`,
@@ -276,6 +281,7 @@ export function quizFlow() {
         },
       },
     )
+    fillPhotos()
   }
 
   render()

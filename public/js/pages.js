@@ -2,6 +2,8 @@
 import { state, esc, money, fmtDate, avatar, mascot, view, act, adminAct, api, toast, me, memberName, dest, loadAuth, clearAuth, saveAuth } from './lib.js'
 import { tallyVotes, bestWindows, dayCounts, estimate, settleUp, daysBetween, DATE_WINDOW, BUDGET } from './logic.js'
 import { shell, go } from './app.js'
+import { icon } from './art.js'
+import { fillPhotos } from './lib.js'
 
 const show = (active, html, handlers = {}, opts = {}) => view(shell(active, html, opts), handlers, opts)
 const going = () => state.trip.members.filter((m) => m.status !== 'out')
@@ -18,7 +20,7 @@ function lockedBanner() {
   if (!l || (!l.destination && !l.start)) return ''
   const d = l.destination && dest(l.destination)
   return `<div class="banner">
-    <h3>It's decided! ${d ? d.emoji : '🎉'}</h3>
+    <h3>It's decided!</h3>
     <p style="margin:0">${d ? `We're going to <b>${esc(d.name)}</b>` : 'Place still to be decided'}${l.start ? `, ${fmtDate(l.start)} to ${fmtDate(l.end)}` : ''}.</p>
   </div>`
 }
@@ -32,12 +34,12 @@ export function home() {
   const voted = people.filter((p) => p.votes.length).length
   const marked = people.filter((p) => p.availability.length).length
   const steps = [
-    { icon: '👋', label: 'Join the trip', done: true, href: '#crew' },
-    { icon: '🎯', label: 'Take the pick-a-place quiz', done: !!m.quiz, href: '#quiz' },
-    { icon: '🗳️', label: 'Vote for your top 3 places', done: m.votes.length > 0, href: '#vote' },
-    { icon: '📅', label: 'Mark the days you are free', done: m.availability.length > 0, href: '#dates' },
-    { icon: '📝', label: 'Plan the trip together', done: !!trip.locked?.destination && !!trip.locked?.start, href: '#plan' },
-    { icon: '💰', label: 'Track costs and settle up', done: false, href: '#money' },
+    { label: 'Join the trip', done: true, href: '#crew' },
+    { label: 'Take the pick-a-place quiz', done: !!m.quiz, href: '#quiz' },
+    { label: 'Vote for your top 3 places', done: m.votes.length > 0, href: '#vote' },
+    { label: 'Mark the days you are free', done: m.availability.length > 0, href: '#dates' },
+    { label: 'Plan the trip together', done: !!trip.locked?.destination && !!trip.locked?.start, href: '#plan' },
+    { label: 'Track costs and settle up', done: false, href: '#money' },
   ]
   const nextStep = steps.find((s) => !s.done)
   const lead = leadingPlace()
@@ -46,22 +48,22 @@ export function home() {
   show(
     'home',
     `${lockedBanner()}
-    ${mascot(nextStep ? `Hey ${esc(m.name)}! Next up: <b>${esc(nextStep.label.toLowerCase())}</b>.` : `You're all set, ${esc(m.name)}! 🎉`)}
+    ${mascot(nextStep ? `Hey ${esc(m.name)}! Next up: <b>${esc(nextStep.label.toLowerCase())}</b>.` : `You're all set, ${esc(m.name)}!`, false, nextStep ? 'idle' : 'cheer')}
     <div class="path">
       ${steps
         .map(
           (s, i) => `<a class="path-step${s.done ? ' done' : ''}${s === nextStep ? ' current' : ''}" href="${s.href}" style="--shift:${[0, 1, 0.4, -0.6, -1, -0.2][i]}">
-            <span class="path-dot">${s.done ? '✓' : s.icon}</span><span class="path-label">${esc(s.label)}</span></a>`,
+            <span class="path-dot">${s.done ? icon('check', 28) : i + 1}</span><span class="path-label">${esc(s.label)}</span></a>`,
         )
         .join('')}
     </div>
     <div class="section-title"><h2>The group so far</h2></div>
     <div class="grid">
-      <div class="card"><h3>🗳️ Votes</h3><p class="muted">${voted} of ${people.length} voted</p>
-        ${lead ? `<p>Leading: <b>${lead.emoji} ${esc(lead.name)}</b></p>` : '<p class="muted">No votes yet</p>'}</div>
-      <div class="card"><h3>📅 Dates</h3><p class="muted">${marked} of ${people.length} marked their days</p>
+      <div class="card"><h3>Votes</h3><p class="muted">${voted} of ${people.length} voted</p>
+        ${lead ? `<p>Leading: <b>${esc(lead.name)}</b></p>` : '<p class="muted">No votes yet</p>'}</div>
+      <div class="card"><h3>Dates</h3><p class="muted">${marked} of ${people.length} marked their days</p>
         ${best ? `<p>Best so far: <b>${fmtDate(best.start)} to ${fmtDate(best.end)}</b> (${best.count} free)</p>` : '<p class="muted">No overlap yet</p>'}</div>
-      <div class="card"><h3>👥 Crew</h3><p class="muted">${people.length} going or maybe</p>
+      <div class="card"><h3>Crew</h3><p class="muted">${people.length} going or maybe</p>
         <div class="row">${trip.members.map(avatar).join('')}</div></div>
     </div>`,
   )
@@ -99,12 +101,14 @@ export function explore(param) {
       .map((d) => {
         const est = estimate(d)
         return `<a class="card dest-card" href="#explore/${d.id}" style="text-decoration:none">
-          <span class="emoji">${d.emoji}</span>
-          <h3 style="margin:4px 0 0">${esc(d.name)}</h3>
-          <span class="muted small">${esc(d.tagline)}</span>
-          <span class="meta">
-            <span class="chip ${est.fits ? 'green' : 'red'}">~${money(est.total)}</span>
-            <span class="chip">${d.fromAccra.hours ? `${d.fromAccra.hours}h from Accra` : 'In Accra'}</span>
+          <span class="photo" data-photo="${d.id}"></span>
+          <span class="body">
+            <h3 style="margin:0">${esc(d.name)}</h3>
+            <span class="muted small">${esc(d.tagline)}</span>
+            <span class="meta">
+              <span class="chip ${est.fits ? 'green' : 'red'}">~${money(est.total)}</span>
+              <span class="chip">${d.fromAccra.hours ? `${d.fromAccra.hours}h from Accra` : 'In Accra'}</span>
+            </span>
           </span></a>`
       })
       .join('')}</div>
@@ -112,6 +116,7 @@ export function explore(param) {
     { filter: (el) => ((exploreFilter = el.dataset.id), explore()) },
     { wide: true },
   )
+  fillPhotos()
 }
 
 function destination(d) {
@@ -121,17 +126,16 @@ function destination(d) {
   show(
     'explore',
     `<a href="#explore" class="btn ghost small plain">← All places</a>
-    <div class="row" style="margin:16px 0 8px"><span style="font-size:44px">${d.emoji}</span>
-      <div><h1 style="margin:0">${esc(d.name)}</h1><span class="muted">${esc(d.region)} Region</span></div></div>
+    <div style="margin:16px 0 8px"><h1 style="margin:0">${esc(d.name)}</h1><span class="muted">${esc(d.region)} Region</span></div>
     <p>${esc(d.tagline)}</p>
     <img id="wiki-img" class="hero-img hidden" alt="${esc(d.name)}">
     <p id="wiki-text" class="muted"></p>
     <p id="wiki-credit" class="credit"></p>
     <div class="row" style="margin:12px 0 4px">
-      <button class="btn ${inVotes ? 'ghost' : ''}" data-action="vote">${inVotes ? 'In my top 3 ✓' : 'Add to my votes'}</button>
+      <button class="btn ${inVotes ? 'ghost' : ''}" data-action="vote">${inVotes ? 'In my top 3' : 'Add to my votes'}</button>
     </div>
 
-    <div class="section-title"><h2>💰 Rough cost per person</h2></div>
+    <div class="section-title"><h2>Rough cost per person</h2></div>
     <div class="card">
       <table class="cost-table">${est.rows.map(([k, v]) => `<tr><td>${esc(k)}</td><td>${money(v)}</td></tr>`).join('')}
         <tr class="total"><td>Total (4 days)</td><td>${money(est.total)}</td></tr></table>
@@ -139,28 +143,28 @@ function destination(d) {
       <p class="muted small" style="margin-top:8px">${est.fits ? `About ${money(BUDGET - est.total)} spare each for extras.` : `About ${money(est.total - BUDGET)} over each. Cutting an activity or a night would help.`} ${esc(state.destNote)}</p>
     </div>
 
-    <div class="section-title"><h2>🚌 Getting there</h2></div>
+    <div class="section-title"><h2>Getting there</h2></div>
     <div class="card"><p style="margin:0">${d.fromAccra.hours ? `About <b>${d.fromAccra.hours} hours</b> (${d.fromAccra.km} km) from Accra. ` : ''}${esc(d.fromAccra.how)}</p></div>
 
-    <div class="section-title"><h2>🎉 Things to do</h2></div>
+    <div class="section-title"><h2>Things to do</h2></div>
     <div class="card"><ul class="clean">${d.activities
       .map((a) => `<li><span class="spacer">${esc(a.name)}</span><span class="chip">${a.cost ? money(a.cost) : 'Free'}</span></li>`)
       .join('')}</ul></div>
 
-    <div class="section-title"><h2>🍲 Food to try</h2></div>
+    <div class="section-title"><h2>Food to try</h2></div>
     <div class="card"><ul class="clean">${d.food.map((f) => `<li>${esc(f)}</li>`).join('')}</ul></div>
 
-    <div class="section-title"><h2>🛏️ Where to stay</h2></div>
+    <div class="section-title"><h2>Where to stay</h2></div>
     <div class="card"><p style="margin:0">${esc(d.stay)}</p></div>
 
-    <div class="section-title"><h2>💡 Tips</h2></div>
+    <div class="section-title"><h2>Tips</h2></div>
     <div class="card"><ul class="clean">${d.tips.map((t) => `<li>${esc(t)}</li>`).join('')}</ul></div>
 
-    <div class="section-title"><h2>☀️ Weather</h2></div>
+    <div class="section-title"><h2>Weather</h2></div>
     <div class="card"><div id="weather" class="muted">Loading forecast…</div>
       <p class="muted small" style="margin:10px 0 0">December and January are dry season, with dusty Harmattan winds, hot afternoons and cooler mornings.</p></div>
 
-    <div class="section-title"><h2>🗺️ Map</h2><span class="spacer"></span><button class="btn blue small" data-action="nearby">Find food & bars nearby</button></div>
+    <div class="section-title"><h2>Map</h2><span class="spacer"></span><button class="btn blue small" data-action="nearby">Find food & bars nearby</button></div>
     <div id="map" class="map"></div>
     <div id="nearby" style="margin-top:12px"></div>
     <p class="credit">Maps © OpenStreetMap contributors · Weather by Open-Meteo · Text and photo from Wikipedia (CC BY-SA)</p>`,
@@ -213,11 +217,11 @@ async function loadWeather(d) {
   try {
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${d.lat}&longitude=${d.lon}&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weather_code&timezone=Africa%2FAccra&forecast_days=7`
     const data = await (await fetch(url)).json()
-    const icon = (c) => (c <= 1 ? '☀️' : c <= 3 ? '⛅' : c <= 48 ? '🌫️' : c <= 67 ? '🌧️' : c <= 82 ? '🌦️' : '⛈️')
+    const sky = (c) => (c <= 1 ? 'Sunny' : c <= 3 ? 'Cloudy' : c <= 48 ? 'Hazy' : c <= 67 ? 'Rain' : c <= 82 ? 'Showers' : 'Storms')
     el.innerHTML = `<div class="row" style="justify-content:space-between">${data.daily.time
       .map(
         (t, i) => `<div class="center" style="min-width:56px"><div class="small muted">${fmtDate(t, { weekday: 'short' })}</div>
-          <div style="font-size:26px">${icon(data.daily.weather_code[i])}</div>
+          <div class="small muted">${sky(data.daily.weather_code[i])}</div>
           <div class="small"><b>${Math.round(data.daily.temperature_2m_max[i])}°</b> ${Math.round(data.daily.temperature_2m_min[i])}°</div></div>`,
       )
       .join('')}</div><p class="muted small" style="margin:8px 0 0">This week's forecast.</p>`
@@ -289,7 +293,7 @@ async function loadNearby(d) {
       const p = places[Number(b.dataset.i)]
       const isStay = !!p.tags.tourism
       await act({ type: 'addItem', list: isStay ? 'checklist' : 'food', title: isStay ? `Check out ${p.tags.name} (${d.name})` : `${p.tags.name} (${d.name})` })
-      b.textContent = 'Added ✓'
+      b.textContent = 'Added'
       b.disabled = true
     }
   } catch {
@@ -317,7 +321,7 @@ export function vote() {
         .map((d) => {
           const rank = picks.indexOf(d.id)
           return `<button class="option${rank >= 0 ? ' selected' : ''}" data-action="pick" data-id="${d.id}">
-            <span class="icon">${rank >= 0 ? ['🥇', '🥈', '🥉'][rank] : d.emoji}</span>
+            <span class="icon">${rank >= 0 ? rank + 1 : ''}</span>
             <span class="spacer">${esc(d.name)}<span class="sub">${esc(d.tagline)}</span></span></button>`
         })
         .join('')}</div>
@@ -331,8 +335,8 @@ export function vote() {
         .filter((t) => t.points)
         .map((t) => {
           const d = dest(t.id)
-          return `<div><div class="row"><b class="spacer">${d.emoji} ${esc(d.name)}</b><span class="muted small">${t.points} pts</span>
-            ${state.isAdmin ? `<button class="btn gold small" data-action="lock" data-id="${d.id}">${locked === d.id ? 'Locked ✓' : 'Lock in'}</button>` : ''}</div>
+          return `<div><div class="row"><b class="spacer">${esc(d.name)}</b><span class="muted small">${t.points} pts</span>
+            ${state.isAdmin ? `<button class="btn gold small" data-action="lock" data-id="${d.id}">${locked === d.id ? 'Locked' : 'Lock in'}</button>` : ''}</div>
             <div class="row" style="margin-top:6px"><div class="bar"><div style="width:${(t.points / maxPoints) * 100}%"></div></div></div>
             <div class="muted small">${t.voters.map(esc).join(', ')}</div></div>`
         })
@@ -465,7 +469,7 @@ function listSection(list, title, placeholder, items, extraFields = '') {
             ${list === 'checklist' || list === 'packing' ? `<input type="checkbox" style="width:22px;height:22px" ${i.done ? 'checked' : ''} data-change="toggle" data-list="${list}" data-id="${i.id}">` : ''}
             <span class="spacer" style="${i.done ? 'text-decoration:line-through;color:var(--faint)' : ''}">${i.time ? `<b>${esc(i.time)}</b> ` : ''}${esc(i.title)}
               <span class="muted small">· ${esc(memberName(i.by))}</span></span>
-            <button class="icon-btn" data-action="remove" data-list="${list}" data-id="${i.id}" aria-label="Remove">✕</button></li>`,
+            <button class="icon-btn" data-action="remove" data-list="${list}" data-id="${i.id}" aria-label="Remove">${icon('close', 18)}</button></li>`,
           )
           .join('') || '<li class="muted">Nothing yet.</li>'
       }</ul>
@@ -490,7 +494,7 @@ export function plan() {
         items
           .map(
             (i) => `<li><span class="spacer">${i.time ? `<b>${esc(i.time)}</b> ` : ''}${esc(i.title)}</span>
-              <button class="icon-btn" data-action="remove" data-list="itinerary" data-id="${i.id}" aria-label="Remove">✕</button></li>`,
+              <button class="icon-btn" data-action="remove" data-list="itinerary" data-id="${i.id}" aria-label="Remove">${icon('close', 18)}</button></li>`,
           )
           .join('') || '<li class="muted small">Nothing planned yet.</li>'
       }</ul>`
@@ -502,7 +506,7 @@ export function plan() {
     `${lockedBanner() || mascot("Nothing's locked in yet. You can still start planning while the group votes!")}
     <h1>Trip plan</h1>
     ${place ? `<p class="muted">Ideas for <b>${esc(place.name)}</b>: ${place.activities.slice(0, 3).map((a) => esc(a.name)).join(', ')}. <a href="#explore/${place.id}">See more</a></p>` : ''}
-    <div class="section-title"><h2>🗓️ Itinerary</h2></div>
+    <div class="section-title"><h2>Itinerary</h2></div>
     <div class="card">${itinerary}
       <form data-form="add" data-list="itinerary" class="row" style="margin-top:16px">
         <select name="day" style="width:auto">${Array.from({ length: nDays }, (_, i) => `<option value="${i + 1}">Day ${i + 1}</option>`).join('')}</select>
@@ -511,9 +515,9 @@ export function plan() {
         <button class="btn small">Add</button>
       </form>
     </div>
-    ${listSection('food', '🍲 Food spots and dishes', 'Add a place to eat or a dish to try', trip.food)}
-    ${listSection('checklist', '✅ To-do', 'e.g. Book the Airbnb', trip.checklist)}
-    ${listSection('packing', '🎒 Packing list', 'e.g. Sunscreen', trip.packing)}`,
+    ${listSection('food', 'Food spots and dishes', 'Add a place to eat or a dish to try', trip.food)}
+    ${listSection('checklist', 'To-do', 'e.g. Book the Airbnb', trip.checklist)}
+    ${listSection('packing', 'Packing list', 'e.g. Sunscreen', trip.packing)}`,
     {
       add: async (data, form) => {
         await act({ type: 'addItem', list: form.dataset.list, ...data })
@@ -552,7 +556,7 @@ export function moneyPage() {
     <div class="section-title"><h2>Budget check</h2></div>
     <div class="card stack">
       <select data-change="place">${state.destinations
-        .map((d) => `<option value="${d.id}" ${d.id === place.id ? 'selected' : ''}>${d.emoji} ${esc(d.name)}</option>`)
+        .map((d) => `<option value="${d.id}" ${d.id === place.id ? 'selected' : ''}>${esc(d.name)}</option>`)
         .join('')}</select>
       <table class="cost-table">${est.rows.map(([k, v]) => `<tr><td>${esc(k)}</td><td>${money(v)}</td></tr>`).join('')}
         <tr class="total"><td>Per person</td><td>${money(est.total)}</td></tr></table>
@@ -583,7 +587,7 @@ export function moneyPage() {
     <div class="card"><ul class="clean">${
       payments
         .map((p) => `<li>${avatar(trip.members.find((x) => x.id === p.from) || { id: p.from, name: '?' })}<span class="spacer"><b>${esc(memberName(p.from))}</b> pays <b>${esc(memberName(p.to))}</b></span><b>${money(p.amount)}</b></li>`)
-        .join('') || '<li class="muted">All square! 🎉</li>'
+        .join('') || '<li class="muted">All square!</li>'
     }</ul>
       <details style="margin-top:10px"><summary class="muted small" style="cursor:pointer">Everyone's balance</summary>
         <ul class="clean">${trip.members
@@ -597,7 +601,7 @@ export function moneyPage() {
         .reverse()
         .map(
           (e) => `<li><span class="spacer"><b>${esc(e.title)}</b><br><span class="muted small">${esc(memberName(e.paidBy))} paid · split ${e.splitWith.length} ways</span></span>
-            <b>${money(e.amount)}</b><button class="icon-btn" data-action="removeExpense" data-id="${e.id}" aria-label="Remove">✕</button></li>`,
+            <b>${money(e.amount)}</b><button class="icon-btn" data-action="removeExpense" data-id="${e.id}" aria-label="Remove">${icon('close', 18)}</button></li>`,
         )
         .join('') || '<li class="muted">No expenses yet.</li>'
     }</ul></div>`,
@@ -626,7 +630,7 @@ export function crew() {
   const trip = state.trip
   const m = me()
   const auth = loadAuth(state.tripId)
-  const msg = `Join our trip planner for ${trip.name}! 🇬🇭 ${inviteLink()}`
+  const msg = `Join our trip planner for ${trip.name}: ${inviteLink()}`
   const statusLabel = { in: "I'm in", maybe: 'Maybe', out: "I'm out" }
   const statusChip = { in: 'green', maybe: 'gold', out: 'red' }
 
@@ -642,10 +646,10 @@ export function crew() {
     <div class="card"><ul class="clean">${trip.members
       .map((p) => {
         const quiz = p.quiz && dest(p.quiz.destination)
-        return `<li>${avatar(p)}<span class="spacer"><b>${esc(p.name)}</b>${p.isAdmin ? ' 🔑' : ''}${p.id === m.id ? ' <span class="muted small">(you)</span>' : ''}<br>
-          <span class="muted small">${quiz ? `Quiz: ${quiz.emoji} ${esc(quiz.name)} · ` : ''}${p.votes.length ? 'Voted ✓' : 'Not voted'} · ${p.availability.length} days free</span></span>
+        return `<li>${avatar(p)}<span class="spacer"><b>${esc(p.name)}</b>${p.isAdmin ? ' <span class="chip blue">Organiser</span>' : ''}${p.id === m.id ? ' <span class="muted small">(you)</span>' : ''}<br>
+          <span class="muted small">${quiz ? `Quiz: ${esc(quiz.name)} · ` : ''}${p.votes.length ? 'Voted' : 'Not voted'} · ${p.availability.length} days free</span></span>
           <span class="chip ${statusChip[p.status]}">${p.status}</span>
-          ${state.isAdmin && !p.isAdmin ? `<button class="icon-btn" data-action="manage" data-id="${p.id}" aria-label="Manage">⋯</button>` : ''}</li>`
+          ${state.isAdmin && !p.isAdmin ? `<button class="icon-btn" data-action="manage" data-id="${p.id}" aria-label="Manage">${icon('more')}</button>` : ''}</li>`
       })
       .join('')}</ul></div>
 
@@ -660,7 +664,7 @@ export function crew() {
 
     ${
       state.isAdmin
-        ? `<div class="section-title"><h2>Organiser tools 🔑</h2></div>
+        ? `<div class="section-title"><h2>Organiser tools</h2></div>
       <div class="card stack">
         <form data-form="rename" class="row"><input name="name" value="${esc(trip.name)}" maxlength="60" style="flex:1"><button class="btn small">Rename</button></form>
         <div class="row">
