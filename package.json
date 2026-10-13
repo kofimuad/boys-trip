@@ -1,0 +1,15 @@
+{
+  "name": "boys-trip",
+  "version": "1.0.0",
+  "description": "Plan a Ghana trip with friends: pick a place, vote on dates, plan and split costs.",
+  "scripts": {
+    "dev": "node scripts/dev-server.mjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "@netlify/blobs": "^11.1.4"
+  },
+  "type": "module",
+  "private": true
+}

@@ -1,0 +1,75 @@
+{
+  "intro": "Can't decide? Answer 8 quick questions and I'll pick a place for you!",
+  "questions": [
+    {
+      "say": "First things first. Where do you feel most at home?",
+      "options": [
+        { "icon": "🏖️", "label": "On a beach", "points": { "busua": 3, "ada": 3, "capecoast": 2, "accra": 1 } },
+        { "icon": "🌳", "label": "In the hills or forest", "points": { "volta": 3, "akosombo": 2, "capecoast": 1 } },
+        { "icon": "🏙️", "label": "In a buzzing city", "points": { "accra": 3, "kumasi": 3 } },
+        { "icon": "🦁", "label": "Somewhere wild", "points": { "mole": 4, "volta": 1 } }
+      ]
+    },
+    {
+      "say": "What does the perfect evening look like?",
+      "options": [
+        { "icon": "🪩", "label": "Club till sunrise", "points": { "accra": 4, "kumasi": 2 } },
+        { "icon": "🔥", "label": "Bonfire and drinks with the boys", "points": { "busua": 3, "ada": 2, "volta": 1 } },
+        { "icon": "🍽️", "label": "A big dinner somewhere nice", "points": { "akosombo": 2, "accra": 2, "capecoast": 2 } },
+        { "icon": "😴", "label": "Early night, big day tomorrow", "points": { "mole": 3, "volta": 3 } }
+      ]
+    },
+    {
+      "say": "How much travelling can you handle to get there?",
+      "options": [
+        { "icon": "🚗", "label": "Two hours max", "points": { "accra": 3, "ada": 3, "akosombo": 3 } },
+        { "icon": "🚌", "label": "Half a day is fine", "points": { "capecoast": 3, "volta": 3, "kumasi": 2, "busua": 2 } },
+        { "icon": "✈️", "label": "I'll go anywhere", "points": { "mole": 3, "busua": 2, "kumasi": 1 } }
+      ]
+    },
+    {
+      "say": "Pick an activity. No overthinking!",
+      "options": [
+        { "icon": "🥾", "label": "Hike to a waterfall", "points": { "volta": 4 } },
+        { "icon": "🏄", "label": "Surf or jet ski", "points": { "busua": 3, "ada": 3 } },
+        { "icon": "🏰", "label": "Explore history", "points": { "capecoast": 4, "kumasi": 2 } },
+        { "icon": "🐘", "label": "See elephants", "points": { "mole": 4 } },
+        { "icon": "🛥️", "label": "Boat cruise", "points": { "akosombo": 3, "ada": 2 } }
+      ]
+    },
+    {
+      "say": "How adventurous are you feeling?",
+      "options": [
+        { "icon": "🛋️", "label": "Fully relaxed, please", "points": { "ada": 2, "akosombo": 2, "busua": 2 } },
+        { "icon": "🙂", "label": "A bit of both", "points": { "capecoast": 2, "accra": 2, "kumasi": 1 } },
+        { "icon": "🧗", "label": "Push me", "points": { "volta": 3, "mole": 3, "busua": 1 } }
+      ]
+    },
+    {
+      "say": "What food are you most excited about?",
+      "options": [
+        { "icon": "🦞", "label": "Seafood by the sea", "points": { "busua": 3, "ada": 3, "capecoast": 2 } },
+        { "icon": "🍲", "label": "Fufu and proper soups", "points": { "kumasi": 3, "volta": 1 } },
+        { "icon": "🍢", "label": "Street food and late-night bites", "points": { "accra": 3, "kumasi": 1 } },
+        { "icon": "🍗", "label": "Anything, I just want to eat", "points": { "akosombo": 1, "mole": 1, "capecoast": 1 } }
+      ]
+    },
+    {
+      "say": "How careful are we being with money?",
+      "options": [
+        { "icon": "🪙", "label": "Every cedi counts", "points": { "volta": 3, "capecoast": 2, "ada": 1 } },
+        { "icon": "💵", "label": "Sensible, with a few treats", "points": { "kumasi": 2, "akosombo": 2, "accra": 1 } },
+        { "icon": "💸", "label": "It's a trip, let's spend", "points": { "mole": 2, "busua": 2, "accra": 2 } }
+      ]
+    },
+    {
+      "say": "Last one! What do you want to bring home?",
+      "options": [
+        { "icon": "📸", "label": "Crazy photos", "points": { "volta": 2, "mole": 2, "akosombo": 2 } },
+        { "icon": "🧵", "label": "Kente and crafts", "points": { "kumasi": 3, "accra": 1 } },
+        { "icon": "🧠", "label": "Stories and history", "points": { "capecoast": 3, "kumasi": 1 } },
+        { "icon": "🌅", "label": "A proper tan", "points": { "busua": 3, "ada": 2 } }
+      ]
+    }
+  ]
+}
