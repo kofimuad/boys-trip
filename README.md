@@ -1,6 +1,6 @@
-# Boys Trip 🇬🇭
+# everytrip
 
-A free, phone-friendly web app for planning a trip around Ghana with your friends. It's styled after Duolingo's playful onboarding, with Kweku the parrot guiding you through each step.
+A free, phone-friendly web app for planning a trip around Ghana with your friends. It has a clean, minimalist look inspired by Duolingo's onboarding, with Kweku the backpacker guiding you through each step.
 
 **How it works**
 

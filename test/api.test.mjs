@@ -4,7 +4,7 @@ import { mkdtempSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
-process.env.LOCAL_BLOBS_DIR = mkdtempSync(join(tmpdir(), 'boystrip-'))
+process.env.LOCAL_BLOBS_DIR = mkdtempSync(join(tmpdir(), 'everytrip-'))
 const { default: api } = await import('../netlify/functions/api.mjs')
 
 async function call(path, { method = 'GET', body, token, admin } = {}) {

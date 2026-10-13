@@ -1,0 +1,52 @@
+// Kweku the backpacker (inline SVG so CSS can animate his parts) and line icons.
+
+// mood: 'idle' (bounce, blink, flag waves), 'cheer' (jumps and waves), 'walk' (steps along)
+export function mascotSvg(mood = 'idle', size = 120) {
+  return `<svg class="kweku ${mood}" width="${size}" height="${Math.round(size * 1.1)}" viewBox="0 0 160 176" role="img" aria-label="Kweku the backpacker">
+  <ellipse class="k-shadow" cx="78" cy="168" rx="40" ry="5" fill="#000" opacity=".07"/>
+  <g class="k-body">
+    <g class="k-flag">
+      <path d="M121 72 124 14" stroke="#7a5a3a" stroke-width="3" stroke-linecap="round"/>
+      <path class="k-cloth" d="M124 14c10-3 22 3 34 2-6 5-6 10-2 16-11 1-21-6-31-3z" fill="#ffc93c"/>
+    </g>
+    <g class="k-pack">
+      <rect x="84" y="62" width="58" height="80" rx="26" fill="#5b8def"/>
+      <rect x="104" y="104" width="34" height="30" rx="9" fill="#4a76d1"/>
+      <path d="M110 112h22" stroke="#3f63b8" stroke-width="3" stroke-linecap="round"/>
+    </g>
+    <g class="k-leg k-leg-l"><rect x="60" y="140" width="13" height="16" rx="5" fill="#9c4f25"/><rect x="52" y="152" width="26" height="12" rx="6" fill="#2f3b52"/><rect x="52" y="160" width="26" height="4" rx="2" fill="#fff"/></g>
+    <g class="k-leg k-leg-r"><rect x="84" y="140" width="13" height="16" rx="5" fill="#9c4f25"/><rect x="80" y="152" width="26" height="12" rx="6" fill="#2f3b52"/><rect x="80" y="160" width="26" height="4" rx="2" fill="#fff"/></g>
+    <path d="M78 40c-26 0-38 22-38 52 0 32 15 54 38 54s38-22 38-54c0-30-12-52-38-52z" fill="#f08a4b"/>
+    <ellipse cx="78" cy="112" rx="22" ry="27" fill="#f6a670"/>
+    <path d="M44 66c4-22 18-30 34-30s30 8 34 30z" fill="#2d6cdf"/>
+    <rect x="26" y="62" width="40" height="8" rx="4" fill="#1f4fb0"/>
+    <circle cx="80" cy="38" r="4" fill="#1f4fb0"/>
+    <g class="k-eyes"><circle cx="66" cy="82" r="3.6" fill="#2b2b2b"/><circle cx="90" cy="82" r="3.6" fill="#2b2b2b"/></g>
+    <circle cx="60" cy="92" r="5" fill="#ff7f6e" opacity=".35"/><circle cx="96" cy="92" r="5" fill="#ff7f6e" opacity=".35"/>
+    <path d="M72 92q6 6 12 0" stroke="#2b2b2b" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+    <path d="M54 96q8 20 6 40" stroke="#3f63b8" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path d="M102 96q-8 20-6 40" stroke="#3f63b8" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <rect class="k-arm-l" x="36" y="100" width="14" height="26" rx="7" fill="#e07a3c" transform="rotate(14 43 102)"/>
+    <rect class="k-arm" x="104" y="96" width="14" height="28" rx="7" fill="#e07a3c"/>
+  </g>
+</svg>`
+}
+
+const ICONS = {
+  home: '<path d="M4 11 12 4l8 7v9h-5v-6H9v6H4z"/>',
+  compass: '<circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/>',
+  vote: '<path d="M4 13h16v7H4z"/><path d="m8 9 3 3 6-7"/>',
+  calendar: '<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>',
+  list: '<path d="M9 6h11M9 12h11M9 18h11"/><circle cx="5" cy="6" r="1"/><circle cx="5" cy="12" r="1"/><circle cx="5" cy="18" r="1"/>',
+  wallet: '<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M16 12.5h2M3 9h18"/>',
+  users: '<circle cx="9" cy="8" r="3"/><path d="M3 19c0-3 3-5 6-5s6 2 6 5"/><path d="M16 5a3 3 0 0 1 0 6M18 14c2 .6 3 2.4 3 5"/>',
+  back: '<path d="M15 5 8 12l7 7"/>',
+  close: '<path d="M6 6l12 12M18 6 6 18"/>',
+  check: '<path d="m5 12 4 4 10-10"/>',
+  key: '<circle cx="8" cy="14" r="4"/><path d="m11 11 8-8M16 6l2 2"/>',
+  more: '<circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>',
+  pin: '<path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>',
+}
+
+export const icon = (name, size = 22) =>
+  `<svg class="ic" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ''}</svg>`

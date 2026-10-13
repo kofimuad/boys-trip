@@ -1,18 +1,28 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 130" role="img" aria-label="Kweku the parrot">
-  <ellipse cx="60" cy="122" rx="34" ry="6" fill="#000" opacity=".08"/>
-  <path d="M46 104v12m-6 2h12" stroke="#ff9600" stroke-width="6" stroke-linecap="round"/>
-  <path d="M74 104v12m-6 2h12" stroke="#ff9600" stroke-width="6" stroke-linecap="round"/>
-  <path d="M60 14c-27 0-42 20-42 46 0 30 17 48 42 48s42-18 42-48C102 34 87 14 60 14z" fill="#e63946"/>
-  <path d="M60 70c-14 0-22 9-22 20 0 12 9 18 22 18s22-6 22-18c0-11-8-20-22-20z" fill="#ffc800"/>
-  <path d="M20 58c-8 10-8 30 4 42 6-10 10-26 8-40z" fill="#2fa84f"/>
-  <path d="M100 58c8 10 8 30-4 42-6-10-10-26-8-40z" fill="#2fa84f"/>
-  <path d="M46 10c4-8 12-10 14-4 2-6 10-4 14 4-6-2-10 0-14 6-4-6-8-8-14-6z" fill="#2fa84f"/>
-  <circle cx="44" cy="46" r="13" fill="#fff"/>
-  <circle cx="76" cy="46" r="13" fill="#fff"/>
-  <circle cx="46" cy="48" r="6.5" fill="#1f1f1f"/>
-  <circle cx="74" cy="48" r="6.5" fill="#1f1f1f"/>
-  <circle cx="48" cy="45" r="2.2" fill="#fff"/>
-  <circle cx="76" cy="45" r="2.2" fill="#fff"/>
-  <path d="M60 52c-8 0-12 6-10 12 2 6 8 10 10 14 2-4 8-8 10-14 2-6-2-12-10-12z" fill="#ffc800" stroke="#e5a800" stroke-width="2"/>
-  <path d="M53 63h14" stroke="#e5a800" stroke-width="2" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" class="kweku still" viewBox="0 0 160 176" role="img" aria-label="Kweku the backpacker">
+  <ellipse class="k-shadow" cx="78" cy="168" rx="40" ry="5" fill="#000" opacity=".07"/>
+  <g class="k-body">
+    <g class="k-flag">
+      <path d="M121 72 124 14" stroke="#7a5a3a" stroke-width="3" stroke-linecap="round"/>
+      <path class="k-cloth" d="M124 14c10-3 22 3 34 2-6 5-6 10-2 16-11 1-21-6-31-3z" fill="#ffc93c"/>
+    </g>
+    <g class="k-pack">
+      <rect x="84" y="62" width="58" height="80" rx="26" fill="#5b8def"/>
+      <rect x="104" y="104" width="34" height="30" rx="9" fill="#4a76d1"/>
+      <path d="M110 112h22" stroke="#3f63b8" stroke-width="3" stroke-linecap="round"/>
+    </g>
+    <g class="k-leg k-leg-l"><rect x="60" y="140" width="13" height="16" rx="5" fill="#9c4f25"/><rect x="52" y="152" width="26" height="12" rx="6" fill="#2f3b52"/><rect x="52" y="160" width="26" height="4" rx="2" fill="#fff"/></g>
+    <g class="k-leg k-leg-r"><rect x="84" y="140" width="13" height="16" rx="5" fill="#9c4f25"/><rect x="80" y="152" width="26" height="12" rx="6" fill="#2f3b52"/><rect x="80" y="160" width="26" height="4" rx="2" fill="#fff"/></g>
+    <path d="M78 40c-26 0-38 22-38 52 0 32 15 54 38 54s38-22 38-54c0-30-12-52-38-52z" fill="#f08a4b"/>
+    <ellipse cx="78" cy="112" rx="22" ry="27" fill="#f6a670"/>
+    <path d="M44 66c4-22 18-30 34-30s30 8 34 30z" fill="#2d6cdf"/>
+    <rect x="26" y="62" width="40" height="8" rx="4" fill="#1f4fb0"/>
+    <circle cx="80" cy="38" r="4" fill="#1f4fb0"/>
+    <g class="k-eyes"><circle cx="66" cy="82" r="3.6" fill="#2b2b2b"/><circle cx="90" cy="82" r="3.6" fill="#2b2b2b"/></g>
+    <circle cx="60" cy="92" r="5" fill="#ff7f6e" opacity=".35"/><circle cx="96" cy="92" r="5" fill="#ff7f6e" opacity=".35"/>
+    <path d="M72 92q6 6 12 0" stroke="#2b2b2b" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+    <path d="M54 96q8 20 6 40" stroke="#3f63b8" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path d="M102 96q-8 20-6 40" stroke="#3f63b8" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <rect class="k-arm-l" x="36" y="100" width="14" height="26" rx="7" fill="#e07a3c" transform="rotate(14 43 102)"/>
+    <rect class="k-arm" x="104" y="96" width="14" height="28" rx="7" fill="#e07a3c"/>
+  </g>
 </svg>
