@@ -1,6 +1,5 @@
 // Pure trip maths, shared by the pages and the tests.
 
-export const DATE_WINDOW = { start: '2026-12-01', end: '2027-01-31' }
 export const BUDGET = 2000
 
 export function addDays(iso, n) {
@@ -32,6 +31,25 @@ export function tallyVotes(members, destinations) {
   return Object.values(scores).sort((a, b) => b.points - a.points || b.firsts - a.firsts)
 }
 
+export const today = () => new Date().toISOString().slice(0, 10)
+
+// 'YYYY-MM' keys for this month and the n-1 after it.
+export function upcomingMonths(from = today(), n = 18) {
+  let [y, m] = from.split('-').map(Number)
+  const out = []
+  for (let i = 0; i < n; i++) {
+    out.push(`${y}-${String(m).padStart(2, '0')}`)
+    if (++m > 12) (m = 1), y++
+  }
+  return out
+}
+
+export function monthDays(ym) {
+  const [y, m] = ym.split('-').map(Number)
+  const last = new Date(Date.UTC(y, m, 0)).getUTCDate()
+  return daysBetween(`${ym}-01`, `${ym}-${String(last).padStart(2, '0')}`)
+}
+
 export function dayCounts(members) {
   const counts = {}
   for (const m of members.filter(going)) for (const d of m.availability) counts[d] = (counts[d] || 0) + 1
@@ -39,8 +57,12 @@ export function dayCounts(members) {
 }
 
 // Best stretches of `length` days where the most people are free every day.
-export function bestWindows(members, { start = DATE_WINDOW.start, end = DATE_WINDOW.end, length = 4, limit = 3 } = {}) {
+export function bestWindows(members, { start, end, length = 4, limit = 3 } = {}) {
   const people = members.filter(going)
+  const all = people.flatMap((m) => m.availability).sort()
+  start ||= all[0]
+  end ||= all[all.length - 1]
+  if (!start) return { windows: [], total: people.length }
   const sets = people.map((m) => ({ name: m.name, days: new Set(m.availability) }))
   const windows = []
   for (const first of daysBetween(start, addDays(end, -(length - 1)))) {
