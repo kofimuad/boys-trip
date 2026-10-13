@@ -27,3 +27,11 @@ test('estimate and quiz', () => {
   const r = scoreQuiz([{ options: [{ points: { a: 1 } }, { points: { b: 3 } }] }], [1])
   assert.equal(r[0].id, 'b')
 })
+
+test('month helpers', async () => {
+  const { upcomingMonths, monthDays } = await import('../public/js/logic.js')
+  assert.deepEqual(upcomingMonths('2026-11-15', 3), ['2026-11', '2026-12', '2027-01'])
+  assert.equal(monthDays('2027-02').length, 28)
+  assert.equal(monthDays('2028-02').length, 29)
+  assert.deepEqual(bestWindows([m('a')], { length: 3 }).windows, [])
+})

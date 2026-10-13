@@ -1,6 +1,6 @@
 // The main pages inside the app shell.
 import { state, esc, money, fmtDate, avatar, mascot, view, act, adminAct, api, toast, me, memberName, dest, loadAuth, clearAuth, saveAuth } from './lib.js'
-import { tallyVotes, bestWindows, dayCounts, estimate, settleUp, daysBetween, DATE_WINDOW, BUDGET } from './logic.js'
+import { tallyVotes, bestWindows, dayCounts, estimate, settleUp, daysBetween, upcomingMonths, monthDays, today, BUDGET } from './logic.js'
 import { shell, go } from './app.js'
 import { icon } from './art.js'
 import { fillPhotos } from './lib.js'
@@ -369,12 +369,21 @@ export function vote() {
 
 /* ---------- Dates ---------- */
 
+let pickedMonths = null
+
 export function dates() {
   const m = me()
   const mine = new Set(m.availability)
   const total = going().length
+  const offered = upcomingMonths()
+  // Show the months anyone has marked; if nobody has yet, the next two.
+  const groupMonths = new Set(state.trip.members.flatMap((p) => p.availability.map((d) => d.slice(0, 7))))
+  pickedMonths ||= new Set(groupMonths.size ? [...groupMonths] : offered.slice(0, 2))
 
   function render() {
+    const now = today()
+    const shown = [...new Set([...pickedMonths, ...[...mine].map((d) => d.slice(0, 7))])].sort()
+    const monthLabel = (ym, opts = { month: 'long', year: 'numeric' }) => fmtDate(ym + '-01', opts)
     const others = state.trip.members.filter((p) => p.id !== m.id)
     const counts = dayCounts([...others, { ...m, availability: [...mine] }])
     const four = bestWindows(state.trip.members, { length: 4 })
@@ -382,21 +391,24 @@ export function dates() {
     const bestDays = new Set(four.windows[0] ? daysBetween(four.windows[0].start, four.windows[0].end) : [])
     const changed = [...mine].sort().join() !== m.availability.join()
 
-    const months = [
-      ['2026-12', 'December 2026'],
-      ['2027-01', 'January 2027'],
-    ]
-    const cal = months
-      .map(([ym, label]) => {
-        const days = daysBetween(DATE_WINDOW.start, DATE_WINDOW.end).filter((d) => d.startsWith(ym))
+    const picker = `<div class="month-picker">${offered
+      .map(
+        (ym) => `<button class="chip${pickedMonths.has(ym) ? ' blue' : ''}${groupMonths.has(ym) ? ' has-dates' : ''}" data-action="month" data-m="${ym}">
+          ${monthLabel(ym, { month: 'short', year: ym.slice(0, 4) === now.slice(0, 4) ? undefined : '2-digit' })}</button>`,
+      )
+      .join('')}</div>`
+    const cal = shown
+      .map((ym) => {
+        const label = monthLabel(ym)
+        const days = monthDays(ym)
         const offset = (new Date(days[0] + 'T00:00:00Z').getUTCDay() + 6) % 7
         return `<h3 class="month-name">${label}</h3><div class="cal">
           ${['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((d) => `<div class="dow">${d}</div>`).join('')}
           ${'<button class="day" disabled></button>'.repeat(offset)}
           ${days
             .map(
-              (d) => `<button class="day${mine.has(d) ? ' mine' : ''}${bestDays.has(d) ? ' best' : ''}" data-action="toggle" data-d="${d}"
-                title="${counts[d] || 0} of ${total} free">${Number(d.slice(8))}<small>${counts[d] ? `${counts[d]}/${total}` : ''}</small></button>`,
+              (d) => `<button class="day${mine.has(d) ? ' mine' : ''}${bestDays.has(d) ? ' best' : ''}${d < now ? ' past' : ''}" data-action="toggle" data-d="${d}"
+                ${d < now ? 'aria-disabled="true"' : ''} title="${counts[d] || 0} of ${total} free">${Number(d.slice(8))}<small>${counts[d] ? `${counts[d]}/${total}` : ''}</small></button>`,
             )
             .join('')}</div>`
       })
@@ -416,25 +428,38 @@ export function dates() {
     show(
       'dates',
       `${lockedBanner()}<h1>When are you free?</h1>
-      <p class="muted">Tap every day you could travel in December and January. Green days are yours; the small number shows how many of the group are free. Gold outline is the best 4-day stretch so far.</p>
-      <div class="row" style="position:sticky;top:64px;z-index:4;background:#fff;padding:8px 0">
+      <p class="muted">Pick the months you want to look at, then tap every day you could travel. Green days are yours; the small number shows how many of the group are free. Gold outline is the best 4-day stretch so far.</p>
+      <h3 style="margin:16px 0 8px">Months</h3>
+      ${picker}
+      <p class="muted small" style="margin:6px 0 0">A dot means someone in the group has marked days that month.</p>
+      <div class="row" style="position:sticky;top:64px;z-index:4;background:var(--bg);padding:8px 0">
         <button class="btn" data-action="save" ${changed ? '' : 'disabled'}>Save my dates</button>
         <button class="btn ghost small plain" data-action="weekends">Add all weekends</button>
         <span class="muted small">${mine.size} days picked</span>
       </div>
-      ${cal}
+      ${cal || '<p class="muted">Pick at least one month above.</p>'}
       <div class="section-title"><h2>Best 4-day stretches</h2></div>
       <div class="card"><ul class="clean">${windowList(four, 4)}</ul></div>
       <div class="section-title"><h2>Best 3-day stretches</h2></div>
       <div class="card"><ul class="clean">${windowList(three, 3)}</ul></div>`,
       {
+        month: (el) => {
+          const ym = el.dataset.m
+          if (pickedMonths.has(ym)) {
+            if ([...mine].some((d) => d.startsWith(ym))) return toast('Clear your days in that month first')
+            pickedMonths.delete(ym)
+          } else pickedMonths.add(ym)
+          render()
+        },
         toggle: (el) => {
           const d = el.dataset.d
+          if (d < now) return
           mine.has(d) ? mine.delete(d) : mine.add(d)
           render()
         },
         weekends: () => {
-          for (const d of daysBetween(DATE_WINDOW.start, DATE_WINDOW.end)) {
+          for (const d of shown.flatMap(monthDays)) {
+            if (d < now) continue
             const day = new Date(d + 'T00:00:00Z').getUTCDay()
             if (day === 0 || day === 5 || day === 6) mine.add(d)
           }

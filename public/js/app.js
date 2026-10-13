@@ -52,7 +52,11 @@ async function refresh() {
 
 async function boot() {
   initEvents()
-  window.addEventListener('hashchange', () => render())
+  // Every page change starts at the top, even pages that keep scroll on their own re-renders.
+  window.addEventListener('hashchange', async () => {
+    await render()
+    window.scrollTo(0, 0)
+  })
   const [destData, quiz] = await Promise.all([
     fetch('/data/destinations.json').then((r) => r.json()),
     fetch('/data/quiz.json').then((r) => r.json()),
