@@ -1,0 +1,461 @@
+{
+  "currency": "GH₵",
+  "note": "Costs are rough per-person planning estimates for a group of six sharing rooms and transport, starting from Accra. Prices in Ghana change quickly, so check before booking.",
+  "destinations": [
+    {
+      "id": "accra",
+      "name": "Accra",
+      "region": "Greater Accra",
+      "emoji": "🏙️",
+      "tagline": "Beach clubs, nightlife and the best food scene in the country.",
+      "wiki": "Accra",
+      "lat": 5.6037,
+      "lon": -0.187,
+      "fromAccra": {
+        "hours": 0,
+        "km": 0,
+        "how": "You're already here. Get around by Uber, Bolt or Yango."
+      },
+      "tags": [
+        "nightlife",
+        "food",
+        "beach",
+        "city"
+      ],
+      "costs": {
+        "transport": 200,
+        "stayPerNight": 250,
+        "foodPerDay": 160,
+        "activities": 350
+      },
+      "activities": [
+        {
+          "name": "Jamestown walking tour and lighthouse",
+          "cost": 100
+        },
+        {
+          "name": "Labadi or Kokrobite beach day",
+          "cost": 80
+        },
+        {
+          "name": "Osu and East Legon nightlife",
+          "cost": 250
+        },
+        {
+          "name": "Kwame Nkrumah Memorial Park",
+          "cost": 50
+        },
+        {
+          "name": "Day trip to Aburi Botanical Gardens",
+          "cost": 150
+        },
+        {
+          "name": "Art Centre for crafts and gifts",
+          "cost": 0
+        }
+      ],
+      "food": [
+        "Waakye at a roadside spot",
+        "Kelewele in Osu at night",
+        "Grilled tilapia and banku at the beach",
+        "Chop bars for fufu and light soup"
+      ],
+      "stay": "Shared Airbnb in Osu, Airport Residential or East Legon.",
+      "tips": [
+        "Traffic is heavy at rush hour, so plan big moves for mornings or late evenings.",
+        "December is peak 'Detty December' season: book stays early and expect higher prices."
+      ]
+    },
+    {
+      "id": "capecoast",
+      "name": "Cape Coast & Elmina",
+      "region": "Central",
+      "emoji": "🏰",
+      "tagline": "History, castles, rainforest canopy walks and chilled beach bars.",
+      "wiki": "Cape Coast",
+      "lat": 5.1053,
+      "lon": -1.2466,
+      "fromAccra": {
+        "hours": 3,
+        "km": 145,
+        "how": "VIP or STC bus from Kaneshie or Circle, or a rented minibus with a driver for the group."
+      },
+      "tags": [
+        "history",
+        "beach",
+        "nature",
+        "chill"
+      ],
+      "costs": {
+        "transport": 300,
+        "stayPerNight": 230,
+        "foodPerDay": 150,
+        "activities": 300
+      },
+      "activities": [
+        {
+          "name": "Cape Coast Castle tour",
+          "cost": 80
+        },
+        {
+          "name": "Elmina Castle tour",
+          "cost": 80
+        },
+        {
+          "name": "Kakum National Park canopy walk",
+          "cost": 120
+        },
+        {
+          "name": "Beach bars at Elmina or Anomabo",
+          "cost": 100
+        },
+        {
+          "name": "Hans Cottage crocodile pond",
+          "cost": 50
+        }
+      ],
+      "food": [
+        "Fresh fish and kenkey by the sea",
+        "Fante kenkey",
+        "Palm nut soup with fufu"
+      ],
+      "stay": "Beach resorts or guesthouses between Cape Coast and Elmina.",
+      "tips": [
+        "Do Kakum early in the morning before the heat and crowds.",
+        "The castle tours are emotional and worth doing with a guide."
+      ]
+    },
+    {
+      "id": "kumasi",
+      "name": "Kumasi",
+      "region": "Ashanti",
+      "emoji": "👑",
+      "tagline": "Ashanti culture, kente villages, huge markets and Lake Bosomtwe.",
+      "wiki": "Kumasi",
+      "lat": 6.6885,
+      "lon": -1.6244,
+      "fromAccra": {
+        "hours": 5,
+        "km": 250,
+        "how": "VIP or STC bus from Accra, or a domestic flight if you find a deal."
+      },
+      "tags": [
+        "culture",
+        "history",
+        "food",
+        "city"
+      ],
+      "costs": {
+        "transport": 400,
+        "stayPerNight": 200,
+        "foodPerDay": 140,
+        "activities": 250
+      },
+      "activities": [
+        {
+          "name": "Manhyia Palace Museum",
+          "cost": 60
+        },
+        {
+          "name": "Kejetia Market walk",
+          "cost": 0
+        },
+        {
+          "name": "Lake Bosomtwe day trip",
+          "cost": 150
+        },
+        {
+          "name": "Bonwire kente weaving village",
+          "cost": 80
+        },
+        {
+          "name": "Kumasi nightlife on Adum and Ahodwo",
+          "cost": 150
+        }
+      ],
+      "food": [
+        "Fufu with goat light soup",
+        "Ampesi and kontomire stew",
+        "Grilled tilapia at Lake Bosomtwe"
+      ],
+      "stay": "Guesthouses or hotels in Ahodwo or Nhyiaeso.",
+      "tips": [
+        "Leave Accra early to beat traffic out of the city.",
+        "A local guide for the kente villages makes the visit much better."
+      ]
+    },
+    {
+      "id": "volta",
+      "name": "Volta Region (Wli & Afadjato)",
+      "region": "Volta",
+      "emoji": "⛰️",
+      "tagline": "Ghana's highest waterfall, its highest mountain and monkey sanctuaries.",
+      "wiki": "Wli Waterfalls",
+      "lat": 7.1236,
+      "lon": 0.5917,
+      "fromAccra": {
+        "hours": 4.5,
+        "km": 220,
+        "how": "Bus or tro-tro to Hohoe, then taxis. A rented minibus is easiest for six."
+      },
+      "tags": [
+        "nature",
+        "adventure",
+        "chill"
+      ],
+      "costs": {
+        "transport": 350,
+        "stayPerNight": 180,
+        "foodPerDay": 130,
+        "activities": 250
+      },
+      "activities": [
+        {
+          "name": "Wli Waterfalls hike (lower and upper falls)",
+          "cost": 80
+        },
+        {
+          "name": "Climb Mount Afadjato",
+          "cost": 60
+        },
+        {
+          "name": "Tafi Atome Monkey Sanctuary",
+          "cost": 60
+        },
+        {
+          "name": "Amedzofe canopy walk and views",
+          "cost": 60
+        },
+        {
+          "name": "Tagbo Falls",
+          "cost": 50
+        }
+      ],
+      "food": [
+        "Akple with okro soup",
+        "Fresh palm wine",
+        "Grilled meat in Hohoe town"
+      ],
+      "stay": "Lodges near Wli or guesthouses in Hohoe.",
+      "tips": [
+        "Bring good shoes: the upper falls hike is steep.",
+        "December to January is dry season, so falls are smaller but trails are easier."
+      ]
+    },
+    {
+      "id": "ada",
+      "name": "Ada Foah",
+      "region": "Greater Accra",
+      "emoji": "🚤",
+      "tagline": "Where the Volta River meets the sea: boat trips, jet skis and island chalets.",
+      "wiki": "Ada Foah",
+      "lat": 5.7833,
+      "lon": 0.6333,
+      "fromAccra": {
+        "hours": 2,
+        "km": 110,
+        "how": "Short drive or tro-tro from Accra. Easy weekend escape."
+      },
+      "tags": [
+        "beach",
+        "chill",
+        "adventure"
+      ],
+      "costs": {
+        "transport": 180,
+        "stayPerNight": 300,
+        "foodPerDay": 170,
+        "activities": 350
+      },
+      "activities": [
+        {
+          "name": "Boat cruise on the Volta estuary",
+          "cost": 150
+        },
+        {
+          "name": "Jet skiing",
+          "cost": 300
+        },
+        {
+          "name": "Island beach chalet stay",
+          "cost": 0
+        },
+        {
+          "name": "Visit the Ada Estuary and turtle beaches",
+          "cost": 50
+        }
+      ],
+      "food": [
+        "Fresh crab and oysters",
+        "Grilled fish on the beach",
+        "Banku with pepper and fish"
+      ],
+      "stay": "Riverside resorts or island beach huts.",
+      "tips": [
+        "Book island huts ahead for December weekends.",
+        "Bring cash: card machines are rare on the islands."
+      ]
+    },
+    {
+      "id": "busua",
+      "name": "Busua & Akwidaa",
+      "region": "Western",
+      "emoji": "🏄",
+      "tagline": "Quiet surf beaches, lobster dinners and Cape Three Points.",
+      "wiki": "Busua",
+      "lat": 4.8044,
+      "lon": -1.9353,
+      "fromAccra": {
+        "hours": 5,
+        "km": 260,
+        "how": "Bus to Takoradi, then a taxi to Busua (about 45 minutes)."
+      },
+      "tags": [
+        "beach",
+        "chill",
+        "adventure"
+      ],
+      "costs": {
+        "transport": 450,
+        "stayPerNight": 250,
+        "foodPerDay": 170,
+        "activities": 300
+      },
+      "activities": [
+        {
+          "name": "Surf lesson at Busua beach",
+          "cost": 250
+        },
+        {
+          "name": "Fort Metal Cross at Dixcove",
+          "cost": 50
+        },
+        {
+          "name": "Cape Three Points lighthouse",
+          "cost": 50
+        },
+        {
+          "name": "Beach bonfire night",
+          "cost": 50
+        }
+      ],
+      "food": [
+        "Lobster and grilled prawns",
+        "Fresh coconut on the beach",
+        "Seafood pizza at the beach spots"
+      ],
+      "stay": "Beach lodges in Busua or eco-lodges in Akwidaa.",
+      "tips": [
+        "Swim only where the locals say it's safe; currents can be strong.",
+        "Long travel day each way, so 4 days works better than 3."
+      ]
+    },
+    {
+      "id": "mole",
+      "name": "Mole National Park",
+      "region": "Savannah",
+      "emoji": "🐘",
+      "tagline": "Walking safaris with elephants, antelope and baboons.",
+      "wiki": "Mole National Park",
+      "lat": 9.2639,
+      "lon": -1.8556,
+      "fromAccra": {
+        "hours": 12,
+        "km": 650,
+        "how": "Fly or take an overnight bus to Tamale, then about 3 hours by road to Mole."
+      },
+      "tags": [
+        "nature",
+        "adventure"
+      ],
+      "costs": {
+        "transport": 1100,
+        "stayPerNight": 300,
+        "foodPerDay": 130,
+        "activities": 300
+      },
+      "activities": [
+        {
+          "name": "Walking safari with a ranger",
+          "cost": 120
+        },
+        {
+          "name": "Jeep safari",
+          "cost": 250
+        },
+        {
+          "name": "Larabanga Mosque (one of the oldest in West Africa)",
+          "cost": 50
+        },
+        {
+          "name": "Mognori eco-village canoe trip",
+          "cost": 100
+        }
+      ],
+      "food": [
+        "Tuo zaafi (TZ) with ayoyo soup",
+        "Guinea fowl",
+        "Hotel restaurant overlooking the waterhole"
+      ],
+      "stay": "Zaina Lodge (luxury) or the Mole Motel (budget).",
+      "tips": [
+        "The journey eats a day each way; 4 days is the minimum.",
+        "Dry season (Dec to Jan) is the best time to see elephants at the waterhole."
+      ]
+    },
+    {
+      "id": "akosombo",
+      "name": "Akosombo",
+      "region": "Eastern",
+      "emoji": "🌉",
+      "tagline": "Lake Volta cruises, the Adomi Bridge and riverside resorts.",
+      "wiki": "Akosombo",
+      "lat": 6.2833,
+      "lon": 0.05,
+      "fromAccra": {
+        "hours": 2,
+        "km": 105,
+        "how": "Short drive from Accra; tro-tros run regularly."
+      },
+      "tags": [
+        "chill",
+        "nature",
+        "adventure"
+      ],
+      "costs": {
+        "transport": 180,
+        "stayPerNight": 300,
+        "foodPerDay": 160,
+        "activities": 350
+      },
+      "activities": [
+        {
+          "name": "Dodi Island cruise on Lake Volta",
+          "cost": 300
+        },
+        {
+          "name": "Adomi Bridge climb",
+          "cost": 150
+        },
+        {
+          "name": "Akosombo Dam visit",
+          "cost": 50
+        },
+        {
+          "name": "Pool and riverside chilling at a resort",
+          "cost": 0
+        }
+      ],
+      "food": [
+        "Fried 'one man thousand' fish",
+        "Abolo with shrimp",
+        "Riverside grills"
+      ],
+      "stay": "Riverside resorts around Akosombo and Atimpoku.",
+      "tips": [
+        "Easy to combine with Ada or the Volta Region.",
+        "Weekend cruises fill up, so book ahead."
+      ]
+    }
+  ]
+}
